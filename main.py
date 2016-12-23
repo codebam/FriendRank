@@ -52,7 +52,7 @@ def showSaved(personDict):
 def convertToInt(number):
     try:
         intInput = int(number)
-        if intInput not in range(11):
+        if intInput not in range(101):
             raise ValueError('Not in the range of numbers that we have programmed for')
         return intInput
     except:
