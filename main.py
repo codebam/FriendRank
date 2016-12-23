@@ -42,10 +42,10 @@ def showSaved(personDict):
         output += "\nNo names in name list!\n"
         return output
     output += "\n----------------------------\n"
-    output += "Name\t\tRank\n"
+    output += "Name\t\tRank"
     output += "\n"
     for name in personDict:
-        output += ('\n%s\t\t%s' % (name, personDict[name]))
+        output += ('\n%-*s\t%s' % (10, name, personDict[name]))
     output += "\n----------------------------"
     return output
 
