@@ -1,108 +1,51 @@
 #!/usr/bin/env python
 
-import json
-
 '''
-FriendRank
+Control FriendRank from the command line.
 Author: Sean Behan
 Inspired by an idea from Terri Dobbins
 '''
+import argparse
+import sys
+import libs.functions  # local reference to lib/functions.py
 
-def loadSave():
-    data = {}
-    try:
-        with open('save.json', 'r') as fp:
-            data = json.load(fp)
-    except:
-        pass
-    return data
+sys.path.append("libs")
 
-def saveDict(personDict):
-    with open('save.json', 'w') as fp:
-        json.dump(personDict, fp)
-    return
-
-def getPersonInfo():
-    print("What's their name?")
-    name = input()
-    print("What's their rank?")
-    rank = convertToInt(input())
-    return [name, rank]
-
-def addNewPerson(personDict, name, rank):
-    personDict[name] = rank
-    return personDict
-
-def showSaved(personDict):
-    output = ''
-    dictLength = 0
-    for element in personDict:
-        dictLength += 1
-    if dictLength == 0:
-        output += "\nNo names in name list!\n"
-        return output
-    output += "\n----------------------------\n"
-    output += "Name\t\tRank"
-    output += "\n"
-    for name in personDict:
-        output += ('\n%-*s\t%s' % (10, name, personDict[name]))
-    output += "\n----------------------------"
-    return output
-
-def convertToInt(number):
-    try:
-        intInput = int(number)
-        if intInput not in range(101):
-            raise ValueError('Not in the range of numbers that we have programmed for')
-        return intInput
-    except:
-        print("This is not valid input, please try again.")
-
-def prompt():
-    output = ('''
-    You can do a few things here :)
-
-    Type a number to choose.
-
-    1. Show saved people
-    2. Add a new person
-    3. Set an existing persons rank
-
-    4. Quit program
-        ''')
-    return output
-
-def addPerson(name, rank, thedict):
-    thedict[name] = rank
 
 def main():
-    print('''
-Welcome to FriendRank!
-    ''')
+    """ Main function
+    """
+    class MyParser(argparse.ArgumentParser):
+        """ Class for argument handling
+        """
+        def error(self, message):
+            # (description='Control FriendRank from the command line.')
+            sys.stderr.write('error: %s\n' % message)
+            self.print_help()
+            sys.exit(2)
 
-    personDict = loadSave()
-    weAreListeningForMoreNames = True
-    # Initialize some variables
+    parser = MyParser()
+    parser.add_argument('name', nargs='+')
 
-    while weAreListeningForMoreNames:
-        print(prompt())
-        userInput = input("Selection: ")
-        userInputInt = convertToInt(userInput)
+    parser.add_argument("-v", "--verbose",
+                        help="increase output verbosity",
+                        action="store_true")
 
-        '''
-        print('userInput: ', list(userInput))
-        print('userInputInt: ', list(str(userInputInt)))
-        '''
+    parser.add_argument('-a', '--add',
+                        help='add a person to the friend list',
+                        action="store_false")
 
-        if (userInputInt == 1):
-            print(showSaved(personDict))
-        elif (userInputInt in [2, 3]):
-            newPersonInfo = getPersonInfo()
-            personDict = addNewPerson(personDict, newPersonInfo[0], newPersonInfo[1])
-            print(showSaved(personDict))
-            saveDict(personDict)
-        elif (userInputInt == 4):
-            print("Bye :)")
-            quit()
+    '''
+    parser.add_argument('names', metavar='name', type=str,
+        help='a string for the persons name')
 
-if  __name__ =='__main__':main()
+    parser.add_argument('ranks', metavar='rank', type=int,
+        help='an integer for the persons rank')
+    '''
+
+    args = parser.parse_args()
+    print(args.help)
+
+
+if __name__ == "__main__":
+    main()
